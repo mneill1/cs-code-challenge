@@ -2,6 +2,7 @@ var taskInput = document.getElementById("new-task");
 var addButton = document.getElementsByTagName("button")[0];
 var incompleteTasksHolder = document.getElementById("incomplete-tasks");
 var completedTasksHolder = document.getElementById("completed-tasks");
+var flag = 0;
 
 var createNewTaskElement = function(taskString, arr) {
   listItem = document.createElement("li");
@@ -10,6 +11,7 @@ var createNewTaskElement = function(taskString, arr) {
   editInput = document.createElement("input");
   editButton = document.createElement("button");
   deleteButton = document.createElement("button");
+  complete = false;
 
   checkBox.type = "checkbox";
   editInput.type = "text";
@@ -29,13 +31,28 @@ var createNewTaskElement = function(taskString, arr) {
 };
 
 var addTask = function () {
-  var listItemName = taskInput.value || "New Item"
+  if(taskInput.value === ""){
+    alert("Please enter a name for the task");
+    return false;
+  }
+  var listItemName = taskInput.value
   listItem = createNewTaskElement(listItemName)
   incompleteTasksHolder.appendChild(listItem)
   bindTaskEvents(listItem, taskCompleted)
+  saveItem(listItemName);
+  console.log(listItem);
   taskInput.value = "";
 };
 
+function saveItem(name){
+  for(i = 0; i < 100; i++){
+    if(window.localStorage.getItem(i) == null){
+      window.localStorage.setItem(i, name);
+      return true;
+    }
+  }
+  return false;
+}
 var editTask = function () {
   var listItem = this.parentNode;
   var editInput = listItem.querySelectorAll("input[type=text")[0];
@@ -50,7 +67,7 @@ var editTask = function () {
      editInput.value = label.innerText
      button.innerText = "Save";
   }
-  
+
   listItem.classList.toggle("editMode");
 };
 
@@ -62,12 +79,19 @@ var deleteTask = function (el) {
 
 var taskCompleted = function (el) {
   var listItem = this.parentNode;
+  var checkBox = listItem.querySelectorAll("input[type=checkbox]")[0];
+  checkBox.checked = true;
+  listItem.complete=true;
   completedTasksHolder.appendChild(listItem);
   bindTaskEvents(listItem, taskIncomplete);
 };
 
 var taskIncomplete = function() {
   var listItem = this.parentNode;
+  var checkBox = listItem.querySelectorAll("input[type=checkbox]")[0];
+  checkBox.checked = false;
+  listItem.complete = false;
+  console.log(listItem.complete);
   incompleteTasksHolder.appendChild(listItem);
   bindTaskEvents(listItem, taskCompleted);
 };
@@ -80,7 +104,6 @@ var bindTaskEvents = function(taskListItem, checkBoxEventHandler, cb) {
   deleteButton.onclick = deleteTask;
   checkBox.onchange = checkBoxEventHandler;
 };
-
 addButton.addEventListener("click", addTask);
 
 for (var i = 0; i < incompleteTasksHolder.children.length; i++) {
@@ -89,4 +112,21 @@ for (var i = 0; i < incompleteTasksHolder.children.length; i++) {
 
 for (var i = 0; i < completedTasksHolder.children.length; i++) {
   bindTaskEvents(completedTasksHolder.children[i], taskIncomplete);
+}
+
+window.onload = function(){
+  console.log("here")
+  for(i=0; i < localStorage.length; i++){
+    var item = window.localStorage.getItem(i);
+    taskInput.value = item;
+    console.log("before addTask" + taskInput.value)
+    addTask();
+    console.log("after addTask" + taskInput.value)
+  }
+}
+var i;
+
+console.log("local storage");
+for (i = 0; i < localStorage.length; i++)   {
+    console.log(localStorage.key(i) + "=[" + localStorage.getItem(localStorage.key(i)) + "]");
 }

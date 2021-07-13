@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "jest": "^27.0.6"
+  },
+  "name": "exercise-1",
+  "version": "1.0.0",
+  "main": "app.js",
+  "devDependencies": {},
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

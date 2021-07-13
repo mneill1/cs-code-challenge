@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <script src="handlebars-v4.7.7.js"></script>
+    <script src="renderUser.js"></script>
+</head>
+<body>
+<script id="handlebars-demo" type="text/x-handlebars-template">
+    <div>
+        Name:{{name}}
+    </div>
+    <img src="{{{avatar}}}"/>
+    <button onclick="showMore()">show more</button>
+    <div id="hiddenVals">
+        ID:{{id}}
+        created at:{{createdAt}}
+    </div>
+</script>
+    <div class="users"></div>
+    <div class="test"></div>
+    <div class="test2"></div>
+<script type="text/javascript">
+    var template = $('#handlebars-demo').html();
+
+    var templateScript = Handlebars.compile(template);
+    $.getJSON('https://5dc588200bbd050014fb8ae1.mockapi.io/assessment', function(data) {
+        var text = `Raw: ${data[0].id}`
+
+        $.each(data, function(i, e){
+            var html = templateScript(renderUser(e));
+            $(document.body).append(html);
+        })
+
+    })
+    renderUser();
+    function showMore() {
+        var hiddenDiv = document.getElementById("hiddenVals");
+        if (hiddenDiv.style.display === "none") {
+            hiddenDiv.style.display = "block";
+        } else {
+            hiddenDiv.style.display = "none";
+    }
+}
+
+</script>
+
+</body>
+</html>
