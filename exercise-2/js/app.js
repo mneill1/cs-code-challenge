@@ -117,11 +117,11 @@ for (var i = 0; i < completedTasksHolder.children.length; i++) {
 window.onload = function(){
   console.log("here")
   for(i=0; i < localStorage.length; i++){
-    var item = window.localStorage.getItem(i);
-    taskInput.value = item;
-    console.log("before addTask" + taskInput.value)
-    addTask();
-    console.log("after addTask" + taskInput.value)
+    var listItemName = window.localStorage.getItem(i);
+    listItem = createNewTaskElement(listItemName)
+    incompleteTasksHolder.appendChild(listItem)
+    bindTaskEvents(listItem, taskCompleted)
+    console.log(listItem);
   }
 }
 var i;
